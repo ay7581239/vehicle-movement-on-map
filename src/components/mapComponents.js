@@ -6,7 +6,7 @@ import L from "leaflet";
 import useGeoLocation from "../customHooks/useGeoLocation";
 import RoutingComponent from "./routingComponents";
 
-const center = { lat: 28.7041, lng: 77.1025 };
+const center = { lat: 17.385044, lng: 78.486671 };
 const markerIcon = new L.Icon({
   iconUrl: markerImage,
   iconSize: [45, 45],
@@ -19,6 +19,10 @@ const MapComponent = () => {
     start: [],
     end: [],
   });
+  const [startLat, setStartLat] = useState("");
+  const [startLng, setStartLng] = useState("");
+  const [endLat, setEndLat] = useState("");
+  const [endLng, setEndLng] = useState("");
   const mapRef = useRef();
   const ZOOM = 9;
 
@@ -33,6 +37,23 @@ const MapComponent = () => {
       );
     } else {
       alert(myLocation.error);
+    }
+  };
+  const handleSetStart = () => {
+    if (startLat && startLng) {
+      setRoutes({
+        ...routes,
+        start: [parseFloat(startLat), parseFloat(startLng)],
+      });
+    }
+  };
+
+  const handleSetEnd = () => {
+    if (endLat && endLng) {
+      setRoutes({
+        ...routes,
+        end: [parseFloat(endLat), parseFloat(endLng)],
+      });
     }
   };
   const MapClickHandler = () => {
@@ -63,8 +84,60 @@ const MapComponent = () => {
   </h1>
   
   <p className="text-lg text-gray-300 text-center max-w-lg bg-gray-800 p-4 rounded-lg shadow-md">
-    Click on any two points on the map and wait for 7-8 seconds for the route to be generated. You can clear the route by clicking on the <strong>Reset the Route</strong> button below.
-  </p>
+        Click on any two points on the map or input their latitude and longitude to set a route. 
+        You can clear the route by clicking on the <strong>Reset the Route</strong> button below.
+      </p>
+
+      <div className="flex flex-col gap-4 w-full max-w-lg bg-gray-800 p-6 rounded-lg shadow-xl">
+        <div className="flex gap-4">
+          <input
+            type="number"
+            step="any"
+            value={startLat}
+            onChange={(e) => setStartLat(e.target.value)}
+            placeholder="Start Latitude"
+            className="w-1/2 p-2 border border-gray-500 rounded-lg"
+          />
+          <input
+            type="number"
+            step="any"
+            value={startLng}
+            onChange={(e) => setStartLng(e.target.value)}
+            placeholder="Start Longitude"
+            className="w-1/2 p-2 border border-gray-500 rounded-lg"
+          />
+          <button
+            onClick={handleSetStart}
+            className="bg-teal-500 text-white font-bold py-2 px-4 rounded-lg shadow-md"
+          >
+            Set Start
+          </button>
+        </div>
+        <div className="flex gap-4">
+          <input
+            type="number"
+            step="any"
+            value={endLat}
+            onChange={(e) => setEndLat(e.target.value)}
+            placeholder="End Latitude"
+            className="w-1/2 p-2 border border-gray-500 rounded-lg"
+          />
+          <input
+            type="number"
+            step="any"
+            value={endLng}
+            onChange={(e) => setEndLng(e.target.value)}
+            placeholder="End Longitude"
+            className="w-1/2 p-2 border border-gray-500 rounded-lg"
+          />
+          <button
+            onClick={handleSetEnd}
+            className="bg-teal-500 text-white font-bold py-2 px-4 rounded-lg shadow-md"
+          >
+            Set End
+          </button>
+        </div>
+      </div>
   
   <MapContainer
     center={position}
